@@ -4,11 +4,11 @@ st.set_page_config(
     page_title="Log in to Adventure Board"
 )
 
-import pkgutil
 import sys
+import os
 
-st.write("Python path:", sys.path)
-st.write("bcrypt found:", pkgutil.find_loader("bcrypt") is not None)
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append("/home/appuser/venv/lib/python3.9/site-packages")
 
 import sqlite3
 from db import get_connection
