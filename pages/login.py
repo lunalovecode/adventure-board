@@ -4,12 +4,11 @@ st.set_page_config(
     page_title="Log in to Adventure Board"
 )
 
-import subprocess
-import sys
-import os
 import streamlit as st
 
 # debug
+import subprocess
+import sys
 st.write("sys.executable:", sys.executable)
 st.write("sys.path:", sys.path)
 
@@ -20,6 +19,11 @@ try:
     st.success(f"bcrypt version: {bcrypt.__version__}")
 except ModuleNotFoundError as e:
     st.error(f"bcrypt not found: {e}")
+
+st.subheader("Install check")
+installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
+st.text(installed.stdout)
+st.text(installed.stderr)
 # end debug
 
 import sqlite3
