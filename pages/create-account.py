@@ -6,10 +6,10 @@ st.set_page_config(
 
 # manually install bcrypt just in case
 import subprocess
-# st.subheader("Install check")
+st.subheader("Install check")
 installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
-# st.text(installed.stdout)
-# st.text(installed.stderr)
+st.text(installed.stdout)
+st.text(installed.stderr)
 
 import bcrypt
 import sqlite3
