@@ -1,14 +1,15 @@
 import streamlit as st
 
-import subprocess
-st.subheader("Install check")
-installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
-st.text(installed.stdout)
-st.text(installed.stderr)
-
 st.set_page_config(
     page_title="Create an Adventure Board account"
 )
+
+# manually install bcrypt just in case
+import subprocess
+# st.subheader("Install check")
+installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
+# st.text(installed.stdout)
+# st.text(installed.stderr)
 
 import bcrypt
 import sqlite3
