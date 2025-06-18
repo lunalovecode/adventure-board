@@ -4,6 +4,10 @@ st.set_page_config(
     page_title="Log in or create an account to see Adventure Board"
 )
 
+# manually install bcrypt
+import subprocess
+installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
+
 from db import get_connection
 import sqlite3
 from time import sleep
