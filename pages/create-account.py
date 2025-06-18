@@ -1,10 +1,13 @@
 import streamlit as st
-import bcrypt
+
+import subprocess
+installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
 
 st.set_page_config(
     page_title="Create an Adventure Board account"
 )
 
+import bcrypt
 import sqlite3
 from db import get_connection, is_empty
 from time import sleep
