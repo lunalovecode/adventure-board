@@ -4,13 +4,6 @@ st.set_page_config(
     page_title="Log in or create an account to see Adventure Board"
 )
 
-import subprocess
-
-st.subheader("Install check")
-installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
-st.text(installed.stdout)
-st.text(installed.stderr)
-
 from db import get_connection
 import sqlite3
 from time import sleep
