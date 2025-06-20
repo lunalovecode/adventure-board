@@ -5,10 +5,21 @@ st.set_page_config(
 )
 
 import subprocess
-import importlib.util
+import sys
+import os
 
-if importlib.util.find_spec("bcrypt") is None:
-    subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"])
+st.write("sys.executable:", sys.executable)
+st.write("sys.path:", sys.path)
+
+installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
+st.text("Installed packages:\n" + installed.stdout)
+
+try:
+    import bcrypt
+    st.success(f"bcrypt version: {bcrypt.__version__}")
+except ModuleNotFoundError as e:
+    st.error(f"bcrypt not found: {e}")
+
 
 from db import get_connection
 import sqlite3
