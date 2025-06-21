@@ -3,3 +3,5 @@ build-essential
 libffi-dev
 python3-dev
 cargo
+musl-dev
+gcc
