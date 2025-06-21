@@ -1,7 +1,6 @@
 pip>=23.3.1
 setuptools>=68
 wheel
-streamlit>=1.45.1
 altair==5.5.0
 attrs==25.3.0
 bcrypt==4.0.1
