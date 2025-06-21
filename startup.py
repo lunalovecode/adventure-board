@@ -33,8 +33,9 @@ with get_connection() as conn:
                     CREATE TABLE IF NOT EXISTS Accounts (
                     name TEXT NOT NULL,
                     username TEXT NOT NULL UNIQUE,
-                    profile_pic BLOB UNIQUE,
-                    password BLOB);''')
+                    email TEXT UNIQUE,
+                    profile_pic BLOB NOT NULL UNIQUE,
+                    password BLOB NOT NULL);''')
         conn.commit()
     
     posts_exist = cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='Posts';").fetchone()
@@ -68,20 +69,3 @@ with get_connection() as conn:
                     );
                     ''')
         conn.commit()
-
-st.write("or")
-login_google = st.button("Login with Google", on_click=st.login)
-
-if login_google:
-    with get_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("INSERT OR REPLACE INTO Accounts (name, username) VALUES (?, ?)", (st.user.name, st.user.email))
-        conn.commit()
-        st.login
-
-if st.user.is_logged_in:
-    st.session_state.current_user = st.user.email
-    st.switch_page("pages/home.py")
-
-if st.session_state.current_user is not None:
-    st.switch_page("pages/home.py")
