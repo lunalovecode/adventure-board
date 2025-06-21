@@ -1,4 +1,3 @@
 streamlit>=1.45.1
-face-recognition==1.3.0
-face-recognition-models==0.3.0
+face-recognition
 bcrypt==4.0.1
