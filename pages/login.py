@@ -4,13 +4,32 @@ st.set_page_config(
     page_title="Log in to Adventure Board"
 )
 
-# manually install bcrypt
+import streamlit as st
+
+# debug
 import subprocess
+import sys
+st.write("sys.executable:", sys.executable)
+st.write("sys.path:", sys.path)
+
+installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
+st.text("Installed packages:\n" + installed.stdout)
+try:
+    import bcrypt
+    st.success(f"bcrypt version: {bcrypt.__version__}")
+except ModuleNotFoundError as e:
+    st.error(f"bcrypt not found: {e}")
+
+st.subheader("Install check")
 installed = subprocess.run(["pip", "install", "bcrypt==4.0.1", "--no-cache-dir"], capture_output=True, text=True)
+st.text(installed.stdout)
+st.text(installed.stderr)
+# end debug
 
 import sqlite3
 from db import get_connection
 from time import sleep
+# import bcrypt
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
