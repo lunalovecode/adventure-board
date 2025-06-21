@@ -69,3 +69,20 @@ with get_connection() as conn:
                     );
                     ''')
         conn.commit()
+
+# st.write("or")
+# login_google = st.button("Login with Google", on_click=st.login)
+
+# if login_google:
+#     with get_connection() as conn:
+#         cursor = conn.cursor()
+#         cursor.execute("INSERT OR REPLACE INTO Accounts (name, username) VALUES (?, ?)", (st.user.name, st.user.email))
+#         conn.commit()
+#         st.login
+
+# if st.user.is_logged_in:
+#     st.session_state.current_user = st.user.email
+#     st.switch_page("pages/home.py")
+
+if st.session_state.current_user is not None:
+    st.switch_page("pages/home.py")
