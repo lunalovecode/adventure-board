@@ -4,12 +4,6 @@ st.set_page_config(
     page_title="Log in to Adventure Board"
 )
 
-import pkgutil
-import sys
-
-st.write("Python path:", sys.path)
-st.write("bcrypt found:", pkgutil.find_loader("bcrypt") is not None)
-
 import sqlite3
 from db import get_connection
 from time import sleep
