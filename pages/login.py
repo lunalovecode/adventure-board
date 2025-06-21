@@ -4,28 +4,10 @@ st.set_page_config(
     page_title="Log in to Adventure Board"
 )
 
-import subprocess
-import sys
-import os
-import streamlit as st
-
-# debug
-st.write("sys.executable:", sys.executable)
-st.write("sys.path:", sys.path)
-
-installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
-st.text("Installed packages:\n" + installed.stdout)
-try:
-    import bcrypt
-    st.success(f"bcrypt version: {bcrypt.__version__}")
-except ModuleNotFoundError as e:
-    st.error(f"bcrypt not found: {e}")
-# end debug
-
 import sqlite3
 from db import get_connection
 from time import sleep
-# import bcrypt
+import bcrypt
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
