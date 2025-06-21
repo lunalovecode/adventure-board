@@ -4,8 +4,6 @@ st.set_page_config(
     page_title="Log in to Adventure Board"
 )
 
-import startup
-import bcrypt
 import sqlite3
 from db import get_connection
 from time import sleep

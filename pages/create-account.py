@@ -4,7 +4,6 @@ st.set_page_config(
     page_title="Create an Adventure Board account"
 )
 
-import startup
 import bcrypt
 import sqlite3
 from db import get_connection, is_empty
