@@ -5,3 +5,5 @@ python3-dev
 cargo
 musl-dev
 gcc
+cffi
+six
