@@ -3,3 +3,4 @@ libffi-dev
 python3-dev
 cmake
 cargo
+python3-opencv

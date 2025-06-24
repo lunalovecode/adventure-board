@@ -1,5 +1,4 @@
 import streamlit as st
-import bcrypt
 
 st.set_page_config(
     page_title="Create an Adventure Board account"
@@ -8,6 +7,8 @@ st.set_page_config(
 import sqlite3
 from db import get_connection, is_empty
 from time import sleep
+import hashlib
+import os
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
@@ -32,12 +33,19 @@ if create:
     elif is_empty(password):
         st.error("Please provide a password.")
     else:
-        hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         picture_data = profile_picture.read()
+        salt = os.urandom(16)
+        key = hashlib.pbkdf2_hmac(
+            'sha256',
+            password.encode(),
+            salt,
+            100000
+        )
+        hashed = salt + key
         with get_connection() as conn:
             cursor = conn.cursor()
             try:
-                cursor.execute("INSERT INTO Accounts VALUES (?, ?, ?, ?)", (name, username, picture_data, hashed))
+                cursor.execute("INSERT INTO Accounts VALUES (?, ?, ?, ?)", (name, username, picture_data, hashed,))
                 conn.commit()
                 st.session_state.current_user = username
                 st.success("Created your new account!")

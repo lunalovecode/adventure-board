@@ -7,7 +7,7 @@ st.set_page_config(
 import sqlite3
 from db import get_connection
 from time import sleep
-import bcrypt
+import hashlib
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
@@ -23,16 +23,23 @@ if log_in:
         cursor = conn.cursor()
         cursor.execute("SELECT password FROM Accounts WHERE username = ?", (username,))
         conn.commit()
-        exists = cursor.fetchone()
-        if exists:
-            stored_hash = exists[0]
-            if bcrypt.checkpw(password.encode("utf-8"), stored_hash):
+        p = cursor.fetchone()
+        if p is None:
+            st.error("Username or password is incorrect")
+        else: 
+            salt = p[0][:16]
+            key = p[0][16:]
+            new_key = hashlib.pbkdf2_hmac(
+                'sha256',
+                password.encode(),
+                salt,
+                100000
+            )
+            if new_key != key:
+                st.error("Username or password is incorrect")
+            else:
                 st.success("Logged in!")
                 st.session_state.current_user = username
                 with st.spinner("Redirecting to home page..."):
                     sleep(5)
                     st.switch_page("pages/home.py")
-            else:
-                st.error("Username or password is incorrect")
-        else:
-            st.error("Username or password is incorrect")

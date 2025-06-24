@@ -17,10 +17,10 @@ if st.session_state.current_user is None:
 if "confirm_delete" not in st.session_state:
     st.session_state.confirm_delete = False
 
-import face_recognition
 from PIL import Image
 import numpy as np
-import io
+from io import BytesIO
+from insightface.app import FaceAnalysis
 
 side_bar()
 
@@ -58,18 +58,19 @@ with get_connection() as conn:
                 cursor.execute("UPDATE Accounts SET password = ? WHERE username = ?", (new_password, st.session_state.current_user))
                 conn.commit()
             if new_pfp:
-                match_result = 0
                 new_pfp_data = new_pfp.getvalue()
-                image1 = face_recognition.load_image_file(io.BytesIO(pic_data))
-                image2 = face_recognition.load_image_file(io.BytesIO(new_pfp_data))
-                face_encodings1 = face_recognition.face_encodings(image1)
-                face_encodings2 = face_recognition.face_encodings(image2)
-                if len(face_encodings1) == 0 or len(face_encodings2) == 0:
-                    st.error("Could not detect faces in one or both images.")
-                else:
-                    match_result = face_recognition.compare_faces([face_encodings1[0]], face_encodings2[0], tolerance=0.5)
-                    if match_result[0]:
-                        st.success("They match!")
+                img1 = np.array(Image.open(BytesIO(pic_data)).convert("RGB"))
+                img2 = np.array(Image.open(BytesIO(new_pfp_data)).convert("RGB"))
+                app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
+                app.prepare(ctx_id=0)
+                faces1 = app.get(img1)
+                faces2 = app.get(img2)
+
+                if faces1 and faces2:
+                    emb1 = faces1[0].embedding
+                    emb2 = faces2[0].embedding
+                    similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
+                    if similarity > 0.5:
                         try:
                             cursor.execute("UPDATE Accounts SET profile_pic = ? WHERE username = ?", (new_pfp_data, st.session_state.current_user))
                             conn.commit()
@@ -82,6 +83,8 @@ with get_connection() as conn:
                                 st.error("That profile picture is already in use. Is someone stealing your face or are you stealing theirs? :face_with_raised_eyebrow:")
                     else:
                         st.error("Faces don't match.")
+                else:
+                    st.error("Could not detect faces in one or both images.")
 
 def delete_account():
     with get_connection() as conn:
